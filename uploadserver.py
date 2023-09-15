@@ -8,6 +8,7 @@ import logging
 
 # ANSI escape codes for colored text and styles
 GREEN = "\033[92m"
+BRIGHTGREEN = "\033[38;5;47m"
 YELLOW = "\033[93m"
 BOLD = "\033[1m"
 RESET = "\033[0m"
@@ -15,6 +16,10 @@ RESET = "\033[0m"
 # Suppress the development server warning
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
+
+# Initialize logging for file uploads
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+upload_logger = logging.getLogger('upload')
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description='Flask Upload Server')
@@ -51,6 +56,11 @@ def upload_file(filename):
         os.makedirs(UPLOAD_FOLDER)
 
     file.save(os.path.join(UPLOAD_FOLDER, filename))
+    
+    # Log file upload
+    client_ip = request.remote_addr
+    upload_logger.info(f"{BRIGHTGREEN}{BOLD}File uploaded:{RESET} {filename} from IP {client_ip}")
+
     return 'File uploaded successfully'
 
 if __name__ == '__main__':
