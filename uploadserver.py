@@ -47,7 +47,7 @@ app = Flask(__name__)
 def upload_file(filename):
     environ = request.environ.copy()
     environ['wsgi.input'] = request.stream
-    environ['CONTENT_LENGTH'] = int(request.headers['Content-Length'])
+    environ['CONTENT_LENGTH'] = request.headers['Content-Length']
     streams, fields, files = parse_form_data(environ)
 
     file = files['file']
